@@ -1,0 +1,20 @@
+{
+  "name": "FORGE Timer — Workout Interval Timer",
+  "short_name": "FORGE",
+  "description": "Professional interval timer for HIIT, CrossFit, Tabata, EMOM, and all training styles.",
+  "start_url": "./app/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#FF3D00",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["fitness", "health", "sports"],
+  "shortcuts": [
+    { "name": "Quick Tabata", "url": "./app/?preset=tabata", "description": "Start Tabata" },
+    { "name": "Quick EMOM", "url": "./app/?preset=emom", "description": "Start EMOM" }
+  ]
+}

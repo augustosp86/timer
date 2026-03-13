@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070708">
+<meta name="description" content="FORGE Timer — Professional interval timer for HIIT, CrossFit, Tabata, EMOM, AMRAP. Works offline as a PWA.">
+<title>FORGE Timer — Train Like a Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── LANDING PAGE STYLES ── */
+:root {
+  --black:#070708; --black2:#0d0d0f; --black3:#131316; --black4:#1a1a1e; --black5:#222228;
+  --red:#ff3d00; --red2:#ff6030; --green:#00e676; --yellow:#ffd600; --blue:#40c4ff;
+  --text1:#f0f0f2; --text2:#a0a0a8; --text3:#606068;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.12);
+  --font-d:'Bebas Neue',sans-serif;
+  --font-c:'Barlow Condensed',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text1);font-family:var(--font-c);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  background:rgba(7,7,8,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:var(--font-d);font-size:26px;letter-spacing:.1em;color:var(--text1);}
+.nav-logo span{color:var(--red);}
+.nav-links{display:flex;gap:24px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);transition:color .2s;}
+.nav-links a:hover{color:var(--text1);}
+.lang-toggle{display:flex;gap:8px;margin-left:16px;}
+.lang-btn{font-size:13px;font-weight:700;letter-spacing:.08em;cursor:pointer;color:var(--text3);transition:.2s;padding:4px 8px;border-radius:6px;}
+.lang-btn.on{color:var(--red);}
+.cta-nav{background:var(--red);color:#fff !important;padding:8px 20px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:.08em;transition:opacity .2s;}
+.cta-nav:hover{opacity:.85;}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 24px 60px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hero::before{
+  content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,61,0,.12) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);margin-bottom:20px;
+}
+.hero h1{
+  font-family:var(--font-d);
+  font-size:clamp(52px,14vw,120px);
+  line-height:.95;letter-spacing:.04em;
+  color:var(--text1);
+  margin-bottom:24px;
+  position:relative;z-index:1;
+}
+.hero h1 span{color:var(--red);}
+.hero-sub{
+  font-size:clamp(16px,2.5vw,20px);
+  color:var(--text2);font-weight:400;line-height:1.6;
+  max-width:540px;margin:0 auto 40px;
+}
+.btn-hero{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--red);color:#fff;
+  font-family:var(--font-c);font-size:18px;font-weight:700;letter-spacing:.1em;
+  padding:16px 40px;border-radius:14px;
+  transition:transform .15s,box-shadow .2s;
+  box-shadow:0 8px 40px rgba(255,61,0,.3);
+}
+.btn-hero:hover{transform:translateY(-2px);box-shadow:0 12px 50px rgba(255,61,0,.4);}
+.btn-hero svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.hero-badges{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  margin-top:40px;
+}
+.badge{
+  background:var(--black3);border:1px solid var(--border);border-radius:10px;
+  padding:8px 16px;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--text3);
+}
+
+/* TIMER MOCKUP */
+.mockup-section{
+  padding:60px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:30px;
+}
+.phone-frame{
+  width:min(300px,80vw);
+  background:var(--black2);
+  border:1.5px solid var(--border2);
+  border-radius:36px;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(255,61,0,.08);
+  position:relative;
+}
+.phone-notch{
+  width:100px;height:28px;
+  background:var(--black);
+  border-radius:0 0 18px 18px;
+  margin:0 auto;position:relative;z-index:2;
+}
+.phone-screen{
+  background:#0a0a0c;
+  padding:20px;
+  min-height:420px;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.phone-screen::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:160px;
+  background:radial-gradient(ellipse at top,rgba(255,61,0,.2) 0%,transparent 70%);
+}
+.mock-phase{
+  font-size:11px;font-weight:700;letter-spacing:.2em;
+  color:var(--red);border:1.5px solid rgba(255,61,0,.3);
+  padding:5px 16px;border-radius:20px;margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.mock-time{
+  font-family:var(--font-d);
+  font-size:100px;line-height:1;letter-spacing:.04em;
+  color:#fff;
+  position:relative;z-index:1;text-align:center;
+}
+.mock-round{
+  font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--text3);
+  margin-top:10px;position:relative;z-index:1;
+}
+.mock-ring{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+}
+.mock-ring svg{width:260px;height:260px;transform:rotate(-90deg);}
+
+/* SECTION STYLES */
+section{padding:80px 24px;}
+.section-center{max-width:720px;margin:0 auto;text-align:center;}
+.section-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);margin-bottom:12px;
+}
+.section-title{
+  font-family:var(--font-d);font-size:clamp(36px,8vw,64px);
+  letter-spacing:.05em;line-height:1.05;color:var(--text1);margin-bottom:20px;
+}
+.section-body{
+  font-size:clamp(15px,2vw,18px);color:var(--text2);font-weight:400;line-height:1.7;
+}
+
+/* FEATURES GRID */
+.features-grid{
+  max-width:980px;margin:60px auto 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+}
+.feat-card{
+  background:var(--black3);border:1px solid var(--border);border-radius:18px;
+  padding:28px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.feat-card:hover{border-color:rgba(255,61,0,.3);}
+.feat-card::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;left:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 60%);
+  pointer-events:none;
+}
+.feat-ico{font-size:36px;margin-bottom:16px;}
+.feat-name{
+  font-family:var(--font-d);font-size:26px;letter-spacing:.05em;
+  color:var(--text1);margin-bottom:8px;
+}
+.feat-desc{font-size:14px;color:var(--text3);line-height:1.6;}
+
+/* HOW IT WORKS */
+.steps{
+  max-width:720px;margin:60px auto 0;
+  display:flex;flex-direction:column;gap:0;
+}
+.step{
+  display:flex;gap:24px;align-items:flex-start;
+  padding:28px 0;border-bottom:1px solid var(--border);
+}
+.step:last-child{border-bottom:none;}
+.step-num{
+  font-family:var(--font-d);font-size:56px;line-height:1;
+  color:rgba(255,61,0,.2);flex-shrink:0;width:60px;
+  transition:.2s;
+}
+.step:hover .step-num{color:var(--red);}
+.step-content{}
+.step-title{
+  font-family:var(--font-d);font-size:26px;letter-spacing:.05em;
+  color:var(--text1);margin-bottom:6px;
+}
+.step-desc{font-size:15px;color:var(--text3);line-height:1.6;}
+
+/* MODES */
+.modes-grid{
+  max-width:900px;margin:60px auto 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.mode-card{
+  background:var(--black3);border:1px solid var(--border);border-radius:16px;
+  padding:22px;cursor:default;
+  transition:border-color .2s,transform .15s;
+}
+.mode-card:hover{border-color:rgba(255,61,0,.3);transform:translateY(-2px);}
+.mode-ico{font-size:28px;margin-bottom:10px;}
+.mode-name{
+  font-family:var(--font-d);font-size:24px;letter-spacing:.05em;
+  color:var(--text1);margin-bottom:6px;
+}
+.mode-params{font-family:var(--font-m);font-size:12px;color:var(--red);margin-bottom:8px;}
+.mode-desc{font-size:13px;color:var(--text3);line-height:1.5;}
+
+/* COLOR CODING */
+.colors-row{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  margin-top:40px;
+}
+.color-pill{
+  display:flex;align-items:center;gap:10px;
+  background:var(--black3);border:1px solid var(--border);
+  border-radius:50px;padding:10px 20px;
+}
+.color-dot{width:14px;height:14px;border-radius:50%;}
+.color-label{font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--text2);}
+
+/* INTERPRETER */
+.interpreter-demo{
+  max-width:600px;margin:40px auto 0;
+  background:var(--black3);border:1px solid var(--border2);border-radius:18px;
+  overflow:hidden;
+}
+.demo-examples{padding:20px 24px;display:flex;flex-direction:column;gap:10px;}
+.demo-ex{
+  background:var(--black4);border:1px solid var(--border);border-radius:12px;
+  padding:12px 16px;
+  font-family:var(--font-m);font-size:13px;color:var(--text2);
+  display:flex;align-items:center;gap:10px;
+}
+.demo-ex::before{content:'>';color:var(--red);font-weight:700;}
+.demo-result{
+  background:rgba(255,61,0,.06);border-top:1px solid rgba(255,61,0,.15);
+  padding:16px 24px;
+  font-size:14px;color:var(--text2);line-height:1.5;
+}
+.demo-result strong{color:var(--red);}
+
+/* SHARE SECTION */
+.share-visual{
+  max-width:500px;margin:40px auto 0;
+  background:var(--black3);border:1px solid var(--border2);border-radius:16px;
+  padding:24px;text-align:center;
+}
+.share-url{
+  font-family:var(--font-m);font-size:13px;color:var(--red);
+  background:var(--black4);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;margin-top:16px;
+  word-break:break-all;line-height:1.5;
+}
+
+/* CTA */
+.cta-section{
+  text-align:center;padding:100px 24px;
+  background:linear-gradient(180deg,var(--black) 0%,rgba(255,61,0,.05) 50%,var(--black) 100%);
+}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 24px;
+  display:flex;flex-wrap:wrap;gap:16px;
+  align-items:center;justify-content:space-between;
+  max-width:1000px;margin:0 auto;
+}
+.footer-logo{font-family:var(--font-d);font-size:22px;letter-spacing:.1em;color:var(--text3);}
+.footer-logo span{color:var(--red);}
+.footer-copy{font-size:12px;color:var(--text3);}
+
+/* MOBILE NAV */
+@media(max-width:640px){
+  .nav-links{display:none;}
+  nav{padding:14px 20px;}
+  .hero h1{font-size:clamp(44px,18vw,80px);}
+  section{padding:60px 20px;}
+}
+
+/* LANG TOGGLE */
+[data-text-en],[data-text-es]{transition:opacity .2s;}
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <div class="nav-logo">FORGE<span>.</span></div>
+  <div class="nav-links">
+    <a href="#features"  class="lc" data-en="Features"    data-es="Características">Features</a>
+    <a href="#how"       class="lc" data-en="How It Works" data-es="Cómo Funciona">How It Works</a>
+    <a href="#modes"     class="lc" data-en="Modes"        data-es="Modos">Modes</a>
+    <a href="app/"       class="cta-nav lc" data-en="Open App" data-es="Abrir App">Open App</a>
+  </div>
+  <div class="lang-toggle">
+    <span class="lang-btn on" data-lang="en">EN</span>
+    <span class="lang-btn"    data-lang="es">ES</span>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <div class="hero-eyebrow lc" data-en="PROFESSIONAL INTERVAL TIMER" data-es="TEMPORIZADOR PROFESIONAL">PROFESSIONAL INTERVAL TIMER</div>
+  <h1>TRAIN<br><span class="lc" data-en="SMARTER" data-es="MEJOR">SMARTER</span></h1>
+  <p class="hero-sub lc"
+    data-en="The timer that understands your workout. Type it, speak it — FORGE builds the structure automatically."
+    data-es="El timer que entiende tu rutina. Escríbela o dísela — FORGE crea la estructura automáticamente.">
+    The timer that understands your workout. Type it, speak it — FORGE builds the structure automatically.
+  </p>
+  <a href="app/" class="btn-hero">
+    <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+    <span class="lc" data-en="LAUNCH FORGE FREE" data-es="ABRIR FORGE GRATIS">LAUNCH FORGE FREE</span>
+  </a>
+  <div class="hero-badges">
+    <div class="badge lc" data-en="⚡ No App Store" data-es="⚡ Sin App Store">⚡ No App Store</div>
+    <div class="badge lc" data-en="📱 Works Offline" data-es="📱 Funciona Sin Red">📱 Works Offline</div>
+    <div class="badge lc" data-en="🔥 Free Forever" data-es="🔥 Gratis Siempre">🔥 Free Forever</div>
+    <div class="badge lc" data-en="🌐 EN + ES" data-es="🌐 ES + EN">🌐 EN + ES</div>
+  </div>
+</div>
+
+<!-- ══════════ MOCKUP ══════════ -->
+<div class="mockup-section">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <div class="mock-ring" aria-hidden="true">
+        <svg viewBox="0 0 260 260">
+          <circle cx="130" cy="130" r="110" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="6"/>
+          <circle cx="130" cy="130" r="110" fill="none" stroke="#ff3d00" stroke-width="6"
+            stroke-dasharray="691" stroke-dashoffset="172" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="mock-phase">WORK</div>
+      <div class="mock-time" id="demo-time">32</div>
+      <div class="mock-round lc" data-en="Round 3 of 10" data-es="Ronda 3 de 10">Round 3 of 10</div>
+    </div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-family:var(--font-d);font-size:28px;letter-spacing:.06em;color:var(--text2);margin-bottom:8px" class="lc" data-en="SEE IT IN ACTION" data-es="MÍRALO EN ACCIÓN">SEE IT IN ACTION</div>
+    <div style="font-size:15px;color:var(--text3)" class="lc"
+      data-en="Full-screen timer · Color-coded phases · Rounds indicator"
+      data-es="Timer pantalla completa · Fases por color · Indicador de rondas">
+      Full-screen timer · Color-coded phases · Rounds indicator
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FEATURES ══════════ -->
+<section id="features">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="EVERYTHING YOU NEED" data-es="TODO LO QUE NECESITAS">EVERYTHING YOU NEED</div>
+    <h2 class="section-title lc" data-en="BUILT FOR ATHLETES" data-es="HECHO PARA ATLETAS">BUILT FOR ATHLETES</h2>
+    <p class="section-body lc"
+      data-en="FORGE is a complete training tool — not just a timer. Smart parsing, voice coaching, background support, and shareable workouts."
+      data-es="FORGE es una herramienta completa — no solo un timer. Interpretación inteligente, guía por voz, soporte en segundo plano y rutinas compartibles.">
+      FORGE is a complete training tool — not just a timer. Smart parsing, voice coaching, background support, and shareable workouts.
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-ico">🧠</div>
+      <div class="feat-name lc" data-en="SMART PARSER" data-es="PARSER INTELIGENTE">SMART PARSER</div>
+      <div class="feat-desc lc"
+        data-en="Just type what you want to do. FORGE reads plain language and generates the full timer structure automatically."
+        data-es="Solo escribe lo que quieres hacer. FORGE lee lenguaje natural y genera la estructura completa del timer.">
+        Just type what you want to do. FORGE reads plain language and generates the full timer structure automatically.
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ico">🗣️</div>
+      <div class="feat-name lc" data-en="VOICE GUIDANCE" data-es="GUÍA DE VOZ">VOICE GUIDANCE</div>
+      <div class="feat-desc lc"
+        data-en="Audio cues at every transition — start, rest, next round, done. Available in English and Spanish."
+        data-es="Señales de audio en cada transición. Disponible en inglés y español.">
+        Audio cues at every transition — start, rest, next round, done. Available in English and Spanish.
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ico">⏱</div>
+      <div class="feat-name lc" data-en="BACKGROUND TIMER" data-es="TIMER EN FONDO">BACKGROUND TIMER</div>
+      <div class="feat-desc lc"
+        data-en="Uses real timestamps — locks screen, switches apps, comes back. The timer stays accurate."
+        data-es="Usa timestamps reales. Bloquea la pantalla, cambia de app y vuelve. El timer sigue exacto.">
+        Uses real timestamps — locks screen, switches apps, comes back. The timer stays accurate.
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ico">📺</div>
+      <div class="feat-name lc" data-en="COACH MODE" data-es="MODO COACH">COACH MODE</div>
+      <div class="feat-desc lc"
+        data-en="Huge display for gym classes. Visible from across the room. One tap to activate."
+        data-es="Pantalla enorme para clases grupales. Visible desde lejos. Un toque para activar.">
+        Huge display for gym classes. Visible from across the room. One tap to activate.
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ico">🔗</div>
+      <div class="feat-name lc" data-en="SHARE WORKOUTS" data-es="COMPARTIR RUTINAS">SHARE WORKOUTS</div>
+      <div class="feat-desc lc"
+        data-en="Generate a link to any workout. Coaches can share it with groups — link loads the workout instantly."
+        data-es="Genera un enlace para cualquier rutina. Los coaches lo comparten con sus grupos.">
+        Generate a link to any workout. Coaches can share it with groups — link loads the workout instantly.
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ico">📱</div>
+      <div class="feat-name lc" data-en="INSTALL AS APP" data-es="INSTALAR COMO APP">INSTALL AS APP</div>
+      <div class="feat-desc lc"
+        data-en="Progressive Web App — add to your home screen, works offline. No app store required."
+        data-es="Progressive Web App — agrega al inicio, funciona sin conexión. Sin tienda de apps.">
+        Progressive Web App — add to your home screen, works offline. No app store required.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<section id="how" style="background:var(--black2)">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="SIMPLE TO USE" data-es="FÁCIL DE USAR">SIMPLE TO USE</div>
+    <h2 class="section-title lc" data-en="HOW IT WORKS" data-es="CÓMO FUNCIONA">HOW IT WORKS</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title lc" data-en="DESCRIBE YOUR WORKOUT" data-es="DESCRIBE TU RUTINA">DESCRIBE YOUR WORKOUT</div>
+        <div class="step-desc lc"
+          data-en='Type something like "10 rounds 40 seconds work 20 seconds rest" or say it using the microphone. FORGE understands natural language in English and Spanish.'
+          data-es='Escribe algo como "10 rondas 40 segundos trabajo 20 descanso" o díselo al micrófono. FORGE entiende lenguaje natural en inglés y español.'>
+          Type something like "10 rounds 40 seconds work 20 seconds rest" or say it using the microphone. FORGE understands natural language in English and Spanish.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title lc" data-en="REVIEW AND START" data-es="REVISAR E INICIAR">REVIEW AND START</div>
+        <div class="step-desc lc"
+          data-en="FORGE instantly creates the timer structure. Hit Start — a 3-2-1 countdown prepares you. Then the timer runs automatically through every phase."
+          data-es="FORGE crea la estructura del timer al instante. Pulsa Iniciar — una cuenta 3-2-1 te prepara. El timer corre automáticamente por cada fase.">
+          FORGE instantly creates the timer structure. Hit Start — a 3-2-1 countdown prepares you. Then the timer runs automatically through every phase.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title lc" data-en="TRAIN WITH FULL FOCUS" data-es="ENTRENA CON FOCO TOTAL">TRAIN WITH FULL FOCUS</div>
+        <div class="step-desc lc"
+          data-en="The screen changes color for each phase. Voice cues guide you. Beeps signal transitions. You just focus on your workout."
+          data-es="La pantalla cambia de color en cada fase. La voz te guía. Los beeps señalan las transiciones. Tú solo enfócate en entrenar.">
+          The screen changes color for each phase. Voice cues guide you. Beeps signal transitions. You just focus on your workout.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title lc" data-en="SAVE AND SHARE" data-es="GUARDA Y COMPARTE">SAVE AND SHARE</div>
+        <div class="step-desc lc"
+          data-en="Save your favorite workouts as presets. Share them with clients or your training group via a single link."
+          data-es="Guarda tus rutinas favoritas como presets. Compártelas con clientes o tu grupo de entrenamiento con un solo enlace.">
+          Save your favorite workouts as presets. Share them with clients or your training group via a single link.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MODES ══════════ -->
+<section id="modes">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="6 TRAINING MODES" data-es="6 MODOS DE ENTRENAMIENTO">6 TRAINING MODES</div>
+    <h2 class="section-title lc" data-en="BUILT FOR EVERY STYLE" data-es="PARA CADA ESTILO">BUILT FOR EVERY STYLE</h2>
+  </div>
+  <div class="modes-grid">
+    <div class="mode-card">
+      <div class="mode-ico">💪</div>
+      <div class="mode-name">INTERVAL</div>
+      <div class="mode-params">40s work · 20s rest · 10 rds</div>
+      <div class="mode-desc lc"
+        data-en="Custom work/rest cycles. The most versatile mode for HIIT and functional training."
+        data-es="Ciclos trabajo/descanso personalizados. El modo más versátil para HIIT.">
+        Custom work/rest cycles. The most versatile mode for HIIT and functional training.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-ico">⚡</div>
+      <div class="mode-name">TABATA</div>
+      <div class="mode-params">20s work · 10s rest · 8 rds</div>
+      <div class="mode-desc lc"
+        data-en="The classic protocol. Maximum effort, minimal rest, scientifically proven to boost VO2 max."
+        data-es="El protocolo clásico. Esfuerzo máximo, descanso mínimo. Científicamente probado.">
+        The classic protocol. Maximum effort, minimal rest, scientifically proven to boost VO2 max.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-ico">⏱</div>
+      <div class="mode-name">EMOM</div>
+      <div class="mode-params">60s · every minute</div>
+      <div class="mode-desc lc"
+        data-en="Every Minute On the Minute. Complete your reps then rest until the next minute starts."
+        data-es="Cada Minuto al Empezar el Minuto. Completa tus reps y descansa hasta el siguiente minuto.">
+        Every Minute On the Minute. Complete your reps then rest until the next minute starts.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-ico">🔥</div>
+      <div class="mode-name">AMRAP</div>
+      <div class="mode-params">As Many Rounds As Possible</div>
+      <div class="mode-desc lc"
+        data-en="Single countdown timer. Complete as many rounds as you can within the time cap. CrossFit staple."
+        data-es="Un solo contador. Completa tantas rondas como puedas dentro del tiempo. Clásico de CrossFit.">
+        Single countdown timer. Complete as many rounds as you can within the time cap. CrossFit staple.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-ico">🏃</div>
+      <div class="mode-name lc" data-en="RUNNING" data-es="CARRERA">RUNNING</div>
+      <div class="mode-params">60s run · 30s walk</div>
+      <div class="mode-desc lc"
+        data-en="Run/walk intervals for outdoor training. Perfect for couch-to-5K, tempo runs, and cardio conditioning."
+        data-es="Intervalos correr/caminar para entrenamiento al aire libre. Perfecto para cardio y running.">
+        Run/walk intervals for outdoor training. Perfect for couch-to-5K, tempo runs, and cardio conditioning.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-ico">🔄</div>
+      <div class="mode-name">CIRCUIT</div>
+      <div class="mode-params">45s work · 15s rest · 5 rds</div>
+      <div class="mode-desc lc"
+        data-en="Multiple exercises in sequence with automatic transitions. Keeps energy up and rest minimal."
+        data-es="Múltiples ejercicios en secuencia con transiciones automáticas. Energía alta, descanso mínimo.">
+        Multiple exercises in sequence with automatic transitions. Keeps energy up and rest minimal.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ COLOR CODING ══════════ -->
+<section style="background:var(--black2)">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="INSTANT VISUAL FEEDBACK" data-es="FEEDBACK VISUAL INSTANTÁNEO">INSTANT VISUAL FEEDBACK</div>
+    <h2 class="section-title lc" data-en="YOU ALWAYS KNOW WHERE YOU ARE" data-es="SIEMPRE SABES DÓNDE ESTÁS">YOU ALWAYS KNOW<br>WHERE YOU ARE</h2>
+    <p class="section-body lc"
+      data-en="The entire screen changes color based on your current phase. No need to read — the color tells you instantly."
+      data-es="La pantalla completa cambia de color según la fase actual. No necesitas leer — el color te lo dice de inmediato.">
+      The entire screen changes color based on your current phase. No need to read — the color tells you instantly.
+    </p>
+    <div class="colors-row">
+      <div class="color-pill"><div class="color-dot" style="background:#ff3d00"></div><span class="color-label lc" data-en="RED = WORK" data-es="ROJO = TRABAJO">RED = WORK</span></div>
+      <div class="color-pill"><div class="color-dot" style="background:#00e676"></div><span class="color-label lc" data-en="GREEN = REST" data-es="VERDE = DESCANSO">GREEN = REST</span></div>
+      <div class="color-pill"><div class="color-dot" style="background:#40c4ff"></div><span class="color-label lc" data-en="BLUE = WARM-UP" data-es="AZUL = CALENTAMIENTO">BLUE = WARM-UP</span></div>
+      <div class="color-pill"><div class="color-dot" style="background:#ffd600"></div><span class="color-label lc" data-en="YELLOW = GET READY" data-es="AMARILLO = PREPÁRATE">YELLOW = GET READY</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SMART INTERPRETER ══════════ -->
+<section id="interpreter">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="AI-POWERED PARSING" data-es="INTERPRETACIÓN INTELIGENTE">AI-POWERED PARSING</div>
+    <h2 class="section-title lc" data-en="JUST TYPE WHAT YOU MEAN" data-es="SOLO ESCRIBE LO QUE QUIERES">JUST TYPE WHAT YOU MEAN</h2>
+    <p class="section-body lc"
+      data-en="No forms, no menus. Describe your workout in plain language and FORGE builds the timer for you."
+      data-es="Sin formularios, sin menús. Describe tu rutina en lenguaje natural y FORGE crea el timer.">
+      No forms, no menus. Describe your workout in plain language and FORGE builds the timer for you.
+    </p>
+  </div>
+  <div class="interpreter-demo">
+    <div class="demo-examples">
+      <div class="demo-ex lc" data-en='"10 rounds 40 seconds work 20 seconds rest"' data-es='"10 rondas 40 segundos trabajo 20 descanso"'>"10 rounds 40 seconds work 20 seconds rest"</div>
+      <div class="demo-ex">"Tabata"</div>
+      <div class="demo-ex lc" data-en='"EMOM 12 minutes"' data-es='"EMOM 12 minutos"'>"EMOM 12 minutes"</div>
+      <div class="demo-ex lc" data-en='"8 rounds 30s on 15s off"' data-es='"8 rondas 30s ejercicio 15s descanso"'>"8 rounds 30s on 15s off"</div>
+      <div class="demo-ex lc" data-en='"AMRAP 15 minutes"' data-es='"AMRAP 15 minutos"'>"AMRAP 15 minutes"</div>
+    </div>
+    <div class="demo-result lc"
+      data-en="✅ FORGE reads the sentence, identifies mode, work/rest durations, and rounds — then builds the complete timer structure automatically."
+      data-es="✅ FORGE lee la frase, identifica el modo, duraciones de trabajo/descanso y rondas — luego construye la estructura completa del timer automáticamente.">
+      ✅ FORGE reads the sentence, identifies mode, work/rest durations, and rounds — then builds the complete timer structure automatically.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SHARE ══════════ -->
+<section style="background:var(--black2)">
+  <div class="section-center">
+    <div class="section-eyebrow lc" data-en="FOR COACHES & TRAINERS" data-es="PARA COACHES Y ENTRENADORES">FOR COACHES & TRAINERS</div>
+    <h2 class="section-title lc" data-en="SHARE ANY WORKOUT" data-es="COMPARTE CUALQUIER RUTINA">SHARE ANY WORKOUT</h2>
+    <p class="section-body lc"
+      data-en="Build a workout once, share it with your entire group. One link opens the complete timer on anyone's phone — no accounts, no downloads."
+      data-es="Crea una rutina una vez, compártela con todo tu grupo. Un enlace abre el timer completo en cualquier teléfono — sin cuentas, sin descargas.">
+      Build a workout once, share it with your entire group. One link opens the complete timer on anyone's phone — no accounts, no downloads.
+    </p>
+    <div class="share-visual">
+      <div style="font-size:32px;margin-bottom:8px">🔗</div>
+      <div style="font-family:var(--font-d);font-size:22px;letter-spacing:.06em;color:var(--text2)" class="lc" data-en="SHAREABLE WORKOUT LINK" data-es="ENLACE DE RUTINA COMPARTIBLE">SHAREABLE WORKOUT LINK</div>
+      <div class="share-url">forge.app/app/?w=eyJuYW1lIjoiSElJVCAxMMOX...</div>
+      <div style="font-size:13px;color:var(--text3);margin-top:12px" class="lc"
+        data-en="Opens workout automatically when clicked. Works on any browser."
+        data-es="Abre la rutina automáticamente al hacer clic. Funciona en cualquier navegador.">
+        Opens workout automatically when clicked. Works on any browser.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="cta-section">
+  <div class="section-eyebrow lc" data-en="FREE & OPEN" data-es="GRATIS Y ABIERTO">FREE & OPEN</div>
+  <h2 class="section-title lc" data-en="START TRAINING NOW" data-es="EMPIEZA A ENTRENAR AHORA">START TRAINING NOW</h2>
+  <p class="section-body lc" style="max-width:480px;margin:0 auto 40px"
+    data-en="No account. No downloads. Just open, describe your workout, and train."
+    data-es="Sin cuenta. Sin descargas. Solo abre, describe tu rutina y entrena.">
+    No account. No downloads. Just open, describe your workout, and train.
+  </p>
+  <a href="app/" class="btn-hero">
+    <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+    <span class="lc" data-en="OPEN FORGE TIMER" data-es="ABRIR FORGE TIMER">OPEN FORGE TIMER</span>
+  </a>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-logo">FORGE<span>.</span></div>
+  <div class="footer-copy lc"
+    data-en="© 2025 FORGE Timer · MIT License · Free for everyone"
+    data-es="© 2025 FORGE Timer · Licencia MIT · Gratis para todos">
+    © 2025 FORGE Timer · MIT License · Free for everyone
+  </div>
+</footer>
+
+<script>
+/* ── LANDING PAGE LANGUAGE ── */
+let currentLang = localStorage.getItem('forge-lang') || 'en';
+
+function applyLandingLang(l) {
+  currentLang = l;
+  localStorage.setItem('forge-lang', l);
+  document.querySelectorAll('.lc[data-' + l + ']').forEach(el => {
+    el.textContent = el.dataset[l];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.lang === l);
+  });
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => applyLandingLang(b.dataset.lang));
+});
+
+applyLandingLang(currentLang);
+
+/* ── DEMO TIMER ANIMATION ── */
+let demoSec = 40;
+let demoPhase = 'work';
+const demoEl = document.getElementById('demo-time');
+setInterval(() => {
+  demoSec--;
+  if (demoSec <= 0) {
+    demoSec = demoPhase === 'work' ? 20 : 40;
+    demoPhase = demoPhase === 'work' ? 'rest' : 'work';
+    const badge = document.querySelector('.mock-phase');
+    if (badge) badge.textContent = demoPhase.toUpperCase();
+    const ring = document.querySelector('.mock-ring circle:last-child');
+    if (ring) ring.setAttribute('stroke', demoPhase === 'work' ? '#ff3d00' : '#00e676');
+  }
+  if (demoEl) demoEl.textContent = demoSec;
+}, 1000);
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) { e.preventDefault(); el.scrollIntoView({ behavior:'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
